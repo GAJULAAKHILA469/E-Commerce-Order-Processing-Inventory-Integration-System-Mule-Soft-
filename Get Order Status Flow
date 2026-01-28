@@ -1,0 +1,11 @@
+<flow name="order-status-flow">
+    <http:listener config-ref="HTTP_Listener_config"
+                   path="/orderStatus"
+                   method="GET"/>
+
+    <db:select config-ref="DB_Config">
+        <db:sql>
+            SELECT * FROM orders WHERE order_id = :orderId
+        </db:sql>
+    </db:select>
+</flow>
