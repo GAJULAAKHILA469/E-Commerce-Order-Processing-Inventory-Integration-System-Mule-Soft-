@@ -1,0 +1,32 @@
+<flow name="order-process-flow">
+
+    <!-- Transform Order -->
+    <dw:transform-message>
+        <dw:set-payload><![CDATA[
+%dw 2.0
+output application/java
+---
+{
+  orderId: payload.orderId,
+  product: payload.product,
+  quantity: payload.quantity,
+  totalAmount: payload.quantity * payload.price,
+  status: "Order Placed"
+}
+        ]]></dw:set-payload>
+    </dw:transform-message>
+
+    <!-- Save Order -->
+    <db:insert config-ref="DB_Config">
+        <db:sql>
+            INSERT INTO orders
+            (order_id, product, quantity, total_amount, status)
+            VALUES (:orderId, :product, :quantity, :totalAmount, :status)
+        </db:sql>
+    </db:insert>
+
+    <!-- Update Inventory -->
+    <flow-ref name="inventory-update-flow"/>
+
+    <set-payload value="Order Processed Successfully"/>
+</flow>
