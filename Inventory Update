@@ -1,0 +1,9 @@
+<flow name="inventory-update-flow">
+    <db:update config-ref="DB_Config">
+        <db:sql>
+            UPDATE inventory
+            SET quantity = quantity - :quantity
+            WHERE product_name = :product
+        </db:sql>
+    </db:update>
+</flow>
