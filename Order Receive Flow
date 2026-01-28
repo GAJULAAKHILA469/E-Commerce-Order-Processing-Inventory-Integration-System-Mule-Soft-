@@ -1,0 +1,15 @@
+<flow name="order-receive-flow">
+    <http:listener config-ref="HTTP_Listener_config"
+                   path="/placeOrder"
+                   method="POST"/>
+
+    <!-- Validate Order -->
+    <choice>
+        <when expression="#[payload.quantity > 0 and payload.price > 0]">
+            <flow-ref name="order-process-flow"/>
+        </when>
+        <otherwise>
+            <set-payload value="Invalid Order Details"/>
+        </otherwise>
+    </choice>
+</flow>
